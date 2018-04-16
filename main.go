@@ -20,5 +20,8 @@ func main() {
 	log.Printf("Listening on: %s", conf.Server)
 	mux := http.NewServeMux()
 	mux.HandleFunc("/StoreEvent", storeEvent)
-	http.ListenAndServe(conf.Server.String(), logger(mux))
+	err = http.ListenAndServe(conf.Server.String(), logger(mux))
+	if err != nil {
+		log.Fatalln(err)
+	}
 }
