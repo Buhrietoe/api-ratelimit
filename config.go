@@ -9,16 +9,16 @@ import (
 
 type server struct {
 	Host string `json:"host"`
-	Port string `json:"port"`
+	Port uint16 `json:"port"`
 }
 
 type remote struct {
 	Host string `json:"host"`
-	Port string `json:"port"`
+	Port uint16 `json:"port"`
 }
 
 type rate struct {
-	Requests int `json:"requests"`
+	Requests uint32 `json:"requests"`
 }
 
 type config struct {
@@ -32,11 +32,11 @@ var conf config
 var defaultConfig = config{
 	Server: server{
 		Host: "127.0.0.1",
-		Port: "8080",
+		Port: 8080,
 	},
 	Remote: remote{
 		Host: "127.0.0.1",
-		Port: "8081",
+		Port: 8081,
 	},
 	Rate: rate{
 		Requests: 10,
@@ -52,16 +52,25 @@ func (c *config) load(filename string) error {
 		c.Server.Host = os.Getenv("ARLE_SERVER_HOST")
 	}
 	if len(os.Getenv("ARLE_SERVER_PORT")) > 0 {
-		c.Server.Port = os.Getenv("ARLE_SERVER_PORT")
+		u64, err := strconv.ParseUint(os.Getenv("ARLE_SERVER_PORT"), 10, 16)
+		if err == nil {
+			c.Server.Port = uint16(u64)
+		}
 	}
 	if len(os.Getenv("ARLE_REMOTE_HOST")) > 0 {
 		c.Remote.Host = os.Getenv("ARLE_REMOTE_HOST")
 	}
 	if len(os.Getenv("ARLE_REMOTE_PORT")) > 0 {
-		c.Remote.Port = os.Getenv("ARLE_REMOTE_PORT")
+		u64, err := strconv.ParseUint(os.Getenv("ARLE_REMOTE_PORT"), 10, 16)
+		if err == nil {
+			c.Remote.Port = uint16(u64)
+		}
 	}
 	if len(os.Getenv("ARLE_RATE_REQUESTS")) > 0 {
-		c.Rate.Requests, _ = strconv.Atoi(os.Getenv("ARLE_RATE_REQUESTS"))
+		u64, err := strconv.ParseUint(os.Getenv("ARLE_RATE_REQUESTS"), 10, 32)
+		if err == nil {
+			c.Rate.Requests = uint32(u64)
+		}
 	}
 
 	// Config file takes precedence
