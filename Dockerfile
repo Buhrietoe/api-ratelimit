@@ -8,5 +8,4 @@ FROM scratch
 LABEL maintainer "Jason Gardner <buhrietoe@gmail.com>"
 EXPOSE 8080
 COPY --from=build /go/src/github.com/Buhrietoe/api-ratelimit-example/arle /arle
-COPY --from=build /go/src/github.com/Buhrietoe/api-ratelimit-example/arle.json /arle.json
 CMD ["/arle", "-config", "arle.json"]

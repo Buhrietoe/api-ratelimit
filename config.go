@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"strconv"
@@ -41,6 +42,14 @@ var defaultConfig = config{
 	Rate: rate{
 		Requests: 10,
 	},
+}
+
+func (s server) String() string {
+	return fmt.Sprintf("%v:%v", s.Host, s.Port)
+}
+
+func (r remote) String() string {
+	return fmt.Sprintf("%v:%v", r.Host, r.Port)
 }
 
 func (c *config) load(filename string) error {

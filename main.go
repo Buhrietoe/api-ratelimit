@@ -2,18 +2,23 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
+	"net/http"
 )
 
 func main() {
 	confPtr := flag.String("config", "arle.json", "config file")
 	flag.Parse()
 
+	log.Println("Loading config...")
 	err := conf.load(*confPtr)
 	if err != nil {
 		log.Printf("Error loading config: %s", err)
 	}
+	log.Println(conf.String())
 
-	fmt.Println(conf)
+	log.Printf("Listening on: %s", conf.Server)
+	mux := http.NewServeMux()
+	mux.HandleFunc("/StoreEvent", storeEvent)
+	http.ListenAndServe(conf.Server.String(), logger(mux))
 }
