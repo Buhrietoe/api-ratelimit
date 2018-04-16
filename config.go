@@ -19,7 +19,8 @@ type remote struct {
 }
 
 type rate struct {
-	Requests uint32 `json:"requests"`
+	RequestsMinute uint32 `json:"requestsminute"`
+	QueueLength    uint16 `json:"queuelength"`
 }
 
 type config struct {
@@ -40,7 +41,8 @@ var defaultConfig = config{
 		Port: 8081,
 	},
 	Rate: rate{
-		Requests: 10,
+		RequestsMinute: 60,
+		QueueLength:    10,
 	},
 }
 
@@ -75,10 +77,16 @@ func (c *config) load(filename string) error {
 			c.Remote.Port = uint16(u64)
 		}
 	}
-	if len(os.Getenv("ARLE_RATE_REQUESTS")) > 0 {
-		u64, err := strconv.ParseUint(os.Getenv("ARLE_RATE_REQUESTS"), 10, 32)
+	if len(os.Getenv("ARLE_RATE_REQUESTS_MINUTE")) > 0 {
+		u64, err := strconv.ParseUint(os.Getenv("ARLE_RATE_REQUESTS_MINUTE"), 10, 32)
 		if err == nil {
-			c.Rate.Requests = uint32(u64)
+			c.Rate.RequestsMinute = uint32(u64)
+		}
+	}
+	if len(os.Getenv("ARLE_RATE_QUEUE_LENGTH")) > 0 {
+		u64, err := strconv.ParseUint(os.Getenv("ARLE_RATE_QUEUE_LENGTH"), 10, 16)
+		if err == nil {
+			c.Rate.QueueLength = uint16(u64)
 		}
 	}
 
