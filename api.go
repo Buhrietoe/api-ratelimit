@@ -21,7 +21,11 @@ func storeEvent(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		// We got something valid
+		conf.Rate.Delay()
 		log.Printf("Got event: %v", values.Get("event"))
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintf(w, "ok")
 	} else {
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprintf(w, "%s method not allowed", r.Method)
