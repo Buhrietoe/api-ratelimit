@@ -14,8 +14,8 @@ type Rate struct {
 }
 
 // New creates a new rate
-func New(limit int) Rate {
-	return Rate{
+func New(limit int) *Rate {
+	return &Rate{
 		Limit: limit,
 	}
 }
