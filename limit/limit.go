@@ -2,6 +2,7 @@ package limit
 
 import (
 	"container/list"
+	"fmt"
 	"sync"
 	"time"
 )
@@ -48,6 +49,9 @@ func (r *Rate) Check() (ok bool, delay time.Duration) {
 	}
 
 	front := r.requests.Front()
+	fmt.Printf("Now: %#v\n", now)
+	fmt.Printf("Front TYPE: %T", front.Value)
+	fmt.Printf("Front: %#v\n", front.Value.(time.Time))
 	if diff := now.Sub(front.Value.(time.Time)); diff < time.Second {
 		return false, time.Second - diff
 	}
