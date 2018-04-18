@@ -1,15 +1,22 @@
-# api-ratelimit-example
+# api-ratelimit
 
 Simple HTTP API server for demonstrating a proxied ratelimit.
 
-Usage:
+## Usage:
 
-    arle -config arle.json
 
-Build:
+## Build Options:
+
+    ./build.sh
+
+or
 
     docker build -t arle:latest .
 
-Run:
+## Run:
 
-    docker run --rm arle:latest
+    ./arl -config arl.json
+
+or
+
+    docker run --rm -v arl.json:/arl.json arle:latest

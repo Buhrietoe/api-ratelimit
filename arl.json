@@ -1,7 +1,6 @@
 {
   "rate": {
-    "queuelength": 10,
-    "requestsminute": 120
+    "limit": 2
   },
   "remote": {
     "host": "127.0.0.1",

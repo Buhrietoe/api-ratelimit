@@ -2,91 +2,43 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"strconv"
+
+	"github.com/Buhrietoe/api-ratelimit/limit"
 )
 
-type server struct {
-	Host string `json:"host"`
-	Port uint16 `json:"port"`
-}
-
-type remote struct {
-	Host string `json:"host"`
-	Port uint16 `json:"port"`
-}
-
-type rate struct {
-	RequestsMinute uint32 `json:"requestsminute"`
-	QueueLength    uint16 `json:"queuelength"`
-}
-
 type config struct {
-	Server server `json:"server"`
-	Remote remote `json:"remote"`
-	Rate   rate   `json:"rate"`
-}
-
-var conf config
-
-var defaultConfig = config{
-	Server: server{
-		Host: "127.0.0.1",
-		Port: 8080,
-	},
-	Remote: remote{
-		Host: "127.0.0.1",
-		Port: 8081,
-	},
-	Rate: rate{
-		RequestsMinute: 60,
-		QueueLength:    10,
-	},
-}
-
-func (s server) String() string {
-	return fmt.Sprintf("%v:%v", s.Host, s.Port)
-}
-
-func (r remote) String() string {
-	return fmt.Sprintf("%v:%v", r.Host, r.Port)
+	Server host       `json:"server"`
+	Remote host       `json:"remote"`
+	Rate   limit.Rate `json:"rate"`
 }
 
 func (c *config) load(filename string) error {
-	// Default config takes lowest priority
-	*c = defaultConfig
-
-	// Environment variables override defaults
-	if len(os.Getenv("ARLE_SERVER_HOST")) > 0 {
-		c.Server.Host = os.Getenv("ARLE_SERVER_HOST")
+	// Environment variables take lower priority
+	if len(os.Getenv("ARL_SERVER_HOST")) > 0 {
+		c.Server.Host = os.Getenv("ARL_SERVER_HOST")
 	}
-	if len(os.Getenv("ARLE_SERVER_PORT")) > 0 {
-		u64, err := strconv.ParseUint(os.Getenv("ARLE_SERVER_PORT"), 10, 16)
+	if len(os.Getenv("ARL_SERVER_PORT")) > 0 {
+		v, err := strconv.Atoi(os.Getenv("ARL_SERVER_PORT"))
 		if err == nil {
-			c.Server.Port = uint16(u64)
+			c.Server.Port = v
 		}
 	}
-	if len(os.Getenv("ARLE_REMOTE_HOST")) > 0 {
-		c.Remote.Host = os.Getenv("ARLE_REMOTE_HOST")
+	if len(os.Getenv("ARL_REMOTE_HOST")) > 0 {
+		c.Remote.Host = os.Getenv("ARL_REMOTE_HOST")
 	}
-	if len(os.Getenv("ARLE_REMOTE_PORT")) > 0 {
-		u64, err := strconv.ParseUint(os.Getenv("ARLE_REMOTE_PORT"), 10, 16)
+	if len(os.Getenv("ARL_REMOTE_PORT")) > 0 {
+		v, err := strconv.Atoi(os.Getenv("ARL_REMOTE_PORT"))
 		if err == nil {
-			c.Remote.Port = uint16(u64)
+			c.Remote.Port = v
 		}
 	}
-	if len(os.Getenv("ARLE_RATE_REQUESTS_MINUTE")) > 0 {
-		u64, err := strconv.ParseUint(os.Getenv("ARLE_RATE_REQUESTS_MINUTE"), 10, 32)
+	if len(os.Getenv("ARL_RATE_LIMIT")) > 0 {
+		v, err := strconv.Atoi(os.Getenv("ARL_RATE_LIMIT"))
 		if err == nil {
-			c.Rate.RequestsMinute = uint32(u64)
-		}
-	}
-	if len(os.Getenv("ARLE_RATE_QUEUE_LENGTH")) > 0 {
-		u64, err := strconv.ParseUint(os.Getenv("ARLE_RATE_QUEUE_LENGTH"), 10, 16)
-		if err == nil {
-			c.Rate.QueueLength = uint16(u64)
+			c.Rate.Limit = v
 		}
 	}
 
@@ -104,7 +56,7 @@ func (c *config) load(filename string) error {
 	return err
 }
 
-func (c config) String() string {
+func (c *config) String() string {
 	outBytes, _ := json.MarshalIndent(c, "", "  ")
 
 	return string(outBytes)
