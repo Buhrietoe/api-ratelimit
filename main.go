@@ -18,7 +18,7 @@ var conf = &config{
 		Host: "127.0.0.1",
 		Port: 8081,
 	},
-	Rate: *limit.New(4),
+	Rate: limit.New(4),
 }
 
 func main() {
