@@ -2,21 +2,14 @@
 
 Simple HTTP API server for demonstrating a proxied ratelimit.
 
-## Usage:
 
-
-## Build Options:
+## Build/Run Locally:
 
     ./build.sh
-
-or
-
-    docker build -t arl:latest .
-
-## Run:
-
     ./arl -config arl.json
 
-or
 
+## Build/Run in Docker:
+
+    docker build -t arl:latest .
     docker run --rm -v $(pwd):/conf arl
