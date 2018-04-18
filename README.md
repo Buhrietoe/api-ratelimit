@@ -11,7 +11,7 @@ Simple HTTP API server for demonstrating a proxied ratelimit.
 
 or
 
-    docker build -t arle:latest .
+    docker build -t arl:latest .
 
 ## Run:
 
@@ -19,4 +19,4 @@ or
 
 or
 
-    docker run --rm -v arl.json:/arl.json arle:latest
+    docker run --rm -v $(pwd):/conf arl
