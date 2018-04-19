@@ -30,7 +30,7 @@ func main() {
 	if err != nil {
 		log.Printf("Error loading config: %s", err)
 	}
-	log.Println(conf.String())
+	log.Printf("Active config: %s\n", conf.String())
 
 	log.Printf("Listening on: %s", conf.Server.String())
 	mux := http.NewServeMux()
