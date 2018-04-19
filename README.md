@@ -14,6 +14,8 @@ Simple Example HTTP API server for rate-limiting and proxying requests.
     docker build -t arl:latest .
     docker run --rm -v $(pwd):/conf arl
 
+The produced docker image is typically 4MB :)
+
 
 ## Configuration
 
