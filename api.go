@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -36,27 +35,5 @@ func storeEvent(w http.ResponseWriter, r *http.Request) {
 	} else {
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprintf(w, "%s method not allowed", r.Method)
-	}
-}
-
-func proxyHTTP(w http.ResponseWriter, r *http.Request) {
-	resp, err := http.DefaultTransport.RoundTrip(r)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusServiceUnavailable)
-		return
-	}
-	defer resp.Body.Close()
-	copyHeader(w.Header(), resp.Header)
-	w.WriteHeader(resp.StatusCode)
-	io.Copy(w, resp.Body)
-
-	log.Printf("Proxied Response: %s, Code: %v", r.RequestURI, resp.StatusCode)
-}
-
-func copyHeader(dst, src http.Header) {
-	for k, vv := range src {
-		for _, v := range vv {
-			dst.Add(k, v)
-		}
 	}
 }
