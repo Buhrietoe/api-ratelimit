@@ -1,4 +1,4 @@
-FROM golang:1.10.1 AS build
+FROM golang:latest AS build
 COPY . /go/src/github.com/Buhrietoe/api-ratelimit/
 WORKDIR /go/src/github.com/Buhrietoe/api-ratelimit/
 ENV CGO_ENABLED 0
