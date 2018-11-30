@@ -1,4 +1,4 @@
-FROM golang:latest AS build
+FROM golang:1-alpine AS build
 COPY . /go/src/github.com/Buhrietoe/api-ratelimit/
 WORKDIR /go/src/github.com/Buhrietoe/api-ratelimit/
 ENV CGO_ENABLED 0
@@ -8,4 +8,5 @@ FROM scratch
 LABEL maintainer "Jason Gardner <buhrietoe@gmail.com>"
 EXPOSE 8080
 COPY --from=build /go/src/github.com/Buhrietoe/api-ratelimit/arl /arl
-CMD ["/arl", "-config", "/conf/arl.json"]
+ENTRYPOINT ["/arl"]
+CMD ["-config", "/conf/arl.json"]
